@@ -1,6 +1,6 @@
 
 
-/*loadAllCustomer();*/
+loadAllCustomer();
 function customerAddOrUpdate() {
     /*var id=$("#txtCusID").val();
     var name=$("#txtCusName").val();
@@ -33,6 +33,7 @@ function customerAddOrUpdate() {
             if (res.status==200){
                 alert(res.message);
                 clearAll();
+                loadAllCustomer();
             }else if (res.status==400){
                 alert(res.message)
                 clearAll();
@@ -73,13 +74,18 @@ $("#btnCustomer").click(function (){
 }*/
 
 
-/*function loadAllCustomer(){
-    $("#customerTable").empty();
-    customerDB.forEach(function (i) {
-        let row = `<tr><td>${i.getId()}</td><td>${i.getName()}</td><td>${i.getAddress()}</td><td>${i.getSalary()}</td></tr>`;
-        $("#customerTable").append(row);
+function loadAllCustomer(){
+    $.ajax({
+        url:"customer?option=GetALL",
+        method : "GET",
+        success:function(resp) {
+            for (const customer of resp.data) {
+                let row = `<tr><td>${customer.id}</td><td>${customer.name}</td><td>${customer.address}</td><td>${customer.salary}</td></tr>`;
+                $("#tblCustomer").append(row);
+            }
+        }
     });
-}*/
+}
 
 function clearAll(){
     $("#txtCusID").val('');
