@@ -6,7 +6,6 @@ function customerAddOrUpdate() {
     var name=$("#txtCusName").val();
     var address=$("#txtCusAddress").val();
     var salary=$("#txtCusSalary").val();*/
-    alert("ok");
 
     var id=$("#txtCusID").val();
     var name=$("#txtCusName").val();
@@ -31,21 +30,20 @@ function customerAddOrUpdate() {
         data : JSON.stringify(customer),
 
         success : function (res){
-
-        },
-        error : function (res){
-
+            if (res.status==200){
+                alert(res.message);
+                clearAll();
+            }else if (res.status==400){
+                alert(res.message)
+                clearAll();
+            }else {
+                alert(res.data);
+                clearAll();
+            }
         }
 
+
     });
-
-
-
-
-
-
-
-
 }
 $("#btnCustomer").click(function (){
     customerAddOrUpdate();

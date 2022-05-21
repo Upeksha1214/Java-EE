@@ -11,7 +11,7 @@ import java.util.ArrayList;
 public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public boolean add(Customer customer) throws SQLException, ClassNotFoundException {
-        return CurdUtil.executeUpdate("INSERT INTO Customer (id,name,tp,address) VALUES (?,?,?,?)",
+        return CurdUtil.executeUpdate("INSERT INTO Customer (custId,custName,custAddress,salary) VALUES (?,?,?,?)",
                 customer.getId(),customer.getName(),customer.getAddress(),customer.getSalary());
     }
 
