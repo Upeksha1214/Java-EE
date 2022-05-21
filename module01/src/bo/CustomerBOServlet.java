@@ -129,7 +129,7 @@ public class CustomerBOServlet extends HttpServlet {
 
                     throw new RuntimeException(e);
 
-                } catch (ClassNotFoundException e) {g
+                } catch (ClassNotFoundException e) {
                     response.add("status", 400);
                     response.add("message", "Error");
                     response.add("data", e.getLocalizedMessage());
