@@ -50,30 +50,6 @@ $("#btnCustomer").click(function (){
     customerAddOrUpdate();
 });
 
-    /*var exitesCustomer=0;
-
-    for (var i in customerDB) {
-        if (customerDB[i].getId()==id){
-            customerDB[i].setName(name);
-            customerDB[i].setAddress(address);
-            customerDB[i].setSalary(salary);
-            exitesCustomer=1;
-            loadAllCustomer();
-            break;
-
-        }else {
-            exitesCustomer=0;
-        }
-    }
-    if (exitesCustomer==0){
-        customerDB.push(new Customer(id,name,address,salary));
-
-        loadAllCustomer();
-    }else {
-    }
-}*/
-
-
 function loadAllCustomer(){
     $.ajax({
         url:"customer?option=GetALL",
@@ -94,7 +70,6 @@ function clearAll(){
     $("#txtCusSalary").val('');
 }
 
-//Search Customer
 
 
 $("#btnSearch").click(function () {

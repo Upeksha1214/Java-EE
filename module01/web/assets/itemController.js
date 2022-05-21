@@ -1,46 +1,58 @@
 //add or update Items start
+
+
 function itemAddOrUpdate(){
-    var id=$("#txtItemCode").val();
+    var code=$("#txtItemCode").val();
     var name=$("#txtItemName").val();
     var qty=$("#txtItemQty").val();
     var price=$("#txtItemPrice").val();
 
-    console.log(id+" "+name+"  "+qty+" "+price);
+    var item={
+        code:code,
+        name:name,
+        qty:qty,
+        price:price
+    }
 
 
-    var exitesItem =0;
+    $.ajax({
+        url: "item",
+        method : "POST",
+        contentType : "application/json",
+        data : JSON.stringify(item),
 
-    for (var i in itemDB) {
-        if (itemDB[i].getId()==id){
-            itemDB[i].setName(name);
-            itemDB[i].setQty(qty);
-            itemDB[i].setPrice(price);
-            exitesItem=1;
-            loadAllItems();
-            break;
+        success : function (res){
+            if (res.status==200){
+                alert(res.message);
 
-        }else {
-            exitesItem=0;
+            }else if (res.status==400){
+                alert(res.message)
+
+            }else {
+                alert(res.data);
+
+            }
         }
-    }
-    if (exitesItem==0){
-        itemDB.push(new Item(id,name,qty,price));
-        loadAllItems();
-    }else {
 
-    }
+    });
 }
 
 $("#btnNewItem").click(function (){
-    alert("ok");
     itemAddOrUpdate();
 });
 
 //add or update items End
 
 
+function clearAll() {
+    $("#txtItemCode").val('');
+    $("#txtItemName").val('');
+    $("#txtItemQty").val('');
+    $("#txtItemPrice").val('');
+}
 
 //search item start
+/*
 $("#btnSearchItem").click(function () {
 
     var response = searchItem($("#txtSearchItem").val());
@@ -55,12 +67,7 @@ $("#btnSearchItem").click(function () {
     }
 });
 
-function clearAll() {
-    $("#txtItemCode").val('');
-    $("#txtItemName").val('');
-    $("#txtItemQty").val('');
-    $("#txtItemPrice").val('');
-}
+
 
 
 function searchItem(itemCode) {
@@ -176,4 +183,4 @@ function validateItem(e){
         $("#lblItemCode").text("Item ID is a required field : Pattern I00-000");
         $("#btnNewItem").prop('disabled',true);
     }
-}
+}*/

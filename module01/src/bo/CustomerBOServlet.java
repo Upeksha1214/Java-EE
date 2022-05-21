@@ -2,7 +2,6 @@ package bo;
 
 import dao.Custom.CustomerDAO;
 import dao.DAOFactory;
-import dao.SuperDAO;
 import entity.Customer;
 
 import javax.json.*;

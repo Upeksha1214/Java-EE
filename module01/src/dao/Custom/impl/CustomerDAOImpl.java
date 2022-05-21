@@ -1,6 +1,5 @@
 package dao.Custom.impl;
 
-import com.sun.xml.internal.bind.v2.model.core.ID;
 import dao.CurdUtil;
 import dao.Custom.CustomerDAO;
 import entity.Customer;
