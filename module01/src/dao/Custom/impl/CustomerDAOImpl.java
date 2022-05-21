@@ -18,8 +18,9 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean delete(String s) throws SQLException, ClassNotFoundException {
-        return false;
+        return CurdUtil.executeUpdate("DELETE FROM Customer WHERE custId=?", s);
     }
+
 
     @Override
     public boolean update(Customer customer) throws SQLException, ClassNotFoundException {

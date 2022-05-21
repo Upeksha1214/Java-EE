@@ -109,8 +109,6 @@ $("#btnSearch").click(function () {
                 $("#txtCusAddress").val(res.data.address);
                 $("#txtCusSalary").val(res.data.salary);
 
-
-
             }else if(res.status==400){
                 alert(res.message);
             }
@@ -131,8 +129,8 @@ $("#btnSearch").click(function () {
 
 
 //Delete Customer
-/*$("#btnDelete").click(function () {
-
+$("#btnDelete").click(function () {
+/*
     var id=$("#txtCusID").val();
     if(searchCustomer(id)==null);
     alert("No Such As A Customer");
@@ -147,8 +145,28 @@ $("#btnSearch").click(function () {
             clearAll();
             break;
         }
-    }
-});*/
+    }*/
+
+
+    $.ajax({
+        url :"customer?id="+$("#txtSearchCusID").val(),
+        method : "DELETE",
+        success : function (res){
+
+            if (res.status == 200){
+                alert(res.message);
+            }else if(res.status == 400){
+                alert(res.message);
+            }
+
+
+        }
+
+
+
+
+    });
+});
 
 // validation start
 /*

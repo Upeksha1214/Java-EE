@@ -207,4 +207,57 @@ public class CustomerBOServlet extends HttpServlet {
 
         }
     }
+
+
+    @Override
+    protected void doDelete(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String id=req.getParameter("id");
+        PrintWriter writer = resp.getWriter();
+        resp.setContentType("application/json");
+
+        try {
+
+            if(customerDAO.delete(id)){
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", 200);
+                objectBuilder.add("data", "");
+                objectBuilder.add("message", "Successfully Deleted");
+                writer.print(objectBuilder.build());
+            }else {
+
+                JsonObjectBuilder objectBuilder = Json.createObjectBuilder();
+                objectBuilder.add("status", 400);
+                objectBuilder.add("data", "");
+                objectBuilder.add("message", "Customer Deleted Fail");
+                writer.print(objectBuilder.build());
+
+            }
+
+
+        } catch (SQLException e) {
+
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e) {
+
+            JsonObjectBuilder response = Json.createObjectBuilder();
+            response.add("status", 400);
+            response.add("message", "Error");
+            response.add("data", e.getLocalizedMessage());
+            writer.print(response.build());
+
+            resp.setStatus(HttpServletResponse.SC_OK); //200
+
+
+            throw new RuntimeException(e);
+        }
+    }
 }
