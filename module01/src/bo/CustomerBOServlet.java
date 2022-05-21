@@ -86,6 +86,70 @@ public class CustomerBOServlet extends HttpServlet {
         resp.setContentType("application/json");
         switch (option){
 
+            case "GETONE" :
+
+                try {
+
+                    if(customerDAO.ifCustomerExist(req.getParameter("id"))){
+
+
+                        Customer cus = customerDAO.search(req.getParameter("id"));
+
+                        JsonObjectBuilder jsonOb = Json.createObjectBuilder();
+                        jsonOb.add("id",cus.getId());
+                        jsonOb.add("name",cus.getName());
+                        jsonOb.add("address",cus.getAddress());
+                        jsonOb.add("salary",cus.getSalary());
+
+                        JsonObjectBuilder response = Json.createObjectBuilder();
+                        response.add("status",200);
+                        response.add("data",jsonOb.build());
+
+                        PrintWriter writer = resp.getWriter();
+                        writer.print(response.build());
+
+
+                    }else {
+
+                        JsonObjectBuilder response = Json.createObjectBuilder();
+                        response.add("status",400);
+                        response.add("message" , "Customer Not Found");
+                        PrintWriter writer = resp.getWriter();
+                        writer.print(response.build());
+
+
+                    }
+
+
+
+
+                } catch (SQLException e) {
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    response.add("status", 400);
+                    response.add("message", "Error");
+                    response.add("data", e.getLocalizedMessage());
+                    PrintWriter writer = resp.getWriter();
+                    writer.print(response.build());
+
+                    resp.setStatus(HttpServletResponse.SC_OK); //200
+
+
+                    throw new RuntimeException(e);
+                } catch (ClassNotFoundException e) {
+                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    response.add("status", 400);
+                    response.add("message", "Error");
+                    response.add("data", e.getLocalizedMessage());
+                    PrintWriter writer = resp.getWriter();
+                    writer.print(response.build());
+
+                    resp.setStatus(HttpServletResponse.SC_OK); //200
+
+                    throw new RuntimeException(e);
+                }
+                break;
+
+
             case "GetALL" :
 
                 try {

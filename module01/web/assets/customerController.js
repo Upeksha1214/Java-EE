@@ -96,20 +96,28 @@ function clearAll(){
 
 //Search Customer
 
-/*$("#btnSearch").click(function () {
-    var searchID = $("#txtSearchCusID").val();
 
-    var response = searchCustomer(searchID);
-    if (response) {
-        $("#txtCusID").val(response.getId());
-        $("#txtCusName").val(response.getName());
-        $("#txtCusAddress").val(response.getAddress());
-        $("#txtCusSalary").val(response.getSalary());
-    }else{
-        clearAll();
-        alert("No Such a Customer");
-    }
-});*/
+$("#btnSearch").click(function () {
+
+    $.ajax({
+        url :"customer?option=GETONE&id="+$("#txtSearchCusID").val(),
+        method : "GET",
+        success : function (res){
+            if (res.status==200){
+                $("#txtCusID").val(res.data.id);
+                $("#txtCusName").val(res.data.name);
+                $("#txtCusAddress").val(res.data.address);
+                $("#txtCusSalary").val(res.data.salary);
+
+
+
+            }else if(res.status==400){
+                alert(res.message);
+            }
+        }
+    })
+
+});
 
 /*function searchCustomer(customerId) {
     for (var i in customerDB) {

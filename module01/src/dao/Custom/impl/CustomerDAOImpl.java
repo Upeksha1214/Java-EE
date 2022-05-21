@@ -17,7 +17,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public boolean delete(ID id) throws SQLException, ClassNotFoundException {
+    public boolean delete(String s) throws SQLException, ClassNotFoundException {
         return false;
     }
 
@@ -27,8 +27,11 @@ public class CustomerDAOImpl implements CustomerDAO {
     }
 
     @Override
-    public Customer search(ID id) throws SQLException, ClassNotFoundException {
-        return null;
+    public Customer search(String id) throws SQLException, ClassNotFoundException {
+        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM customer WHERE custId=?", id);
+        resultSet.next();
+        return new Customer(resultSet.getString("custId"),resultSet.getString("custName"),
+                resultSet.getString("custAddress"),resultSet.getString("salary"));
     }
 
     @Override
@@ -39,5 +42,10 @@ public class CustomerDAOImpl implements CustomerDAO {
             allCustomers.add(new Customer(resultSet.getString("custId"),resultSet.getString("custName"),resultSet.getString("custAddress"),resultSet.getString("salary")));
         }
         return allCustomers;
+    }
+
+    @Override
+    public boolean ifCustomerExist(String id) throws SQLException, ClassNotFoundException {
+        return CurdUtil.executeQuery("SELECT custId FROM customer WHERE custId=?", id).next();
     }
 }
