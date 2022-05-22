@@ -5,6 +5,7 @@ import dao.CurdUtil;
 import dao.Custom.ItemDAO;
 import entity.Item;
 
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
@@ -12,7 +13,7 @@ public class ItemDAOImpl implements ItemDAO{
 
     @Override
     public boolean ifItemExist(String code) throws SQLException, ClassNotFoundException {
-        return false;
+        return CurdUtil.executeQuery("SELECT itemCode FROM Item WHERE itemCode=?", code).next();
     }
 
     @Override
@@ -23,7 +24,7 @@ public class ItemDAOImpl implements ItemDAO{
 
     @Override
     public boolean delete(String s) throws SQLException, ClassNotFoundException {
-        return false;
+        return CurdUtil.executeUpdate("DELETE FROM Item WHERE itemCode=?",s);
     }
 
     @Override
@@ -33,11 +34,18 @@ public class ItemDAOImpl implements ItemDAO{
 
     @Override
     public Item search(String s) throws SQLException, ClassNotFoundException {
-        return null;
+        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Item WHERE itemCode=?", s);
+        resultSet.next();
+        return new Item(resultSet.getString("itemCode"),resultSet.getString("name"),resultSet.getString("qty"),resultSet.getString("price"));
     }
 
     @Override
     public ArrayList<Item> getAll() throws SQLException, ClassNotFoundException {
-        return null;
+        ArrayList<Item> allItems=new ArrayList<>();
+        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Item");
+        while (resultSet.next()){
+            allItems.add(new Item(resultSet.getString("itemCode"),resultSet.getString("name"),resultSet.getString("qty"),resultSet.getString("price")));
+        }
+        return allItems;
     }
 }

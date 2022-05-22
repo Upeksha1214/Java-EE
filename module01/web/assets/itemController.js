@@ -1,6 +1,7 @@
+
+loadAllItems();
+
 //add or update Items start
-
-
 function itemAddOrUpdate(){
     var code=$("#txtItemCode").val();
     var name=$("#txtItemName").val();
@@ -24,7 +25,7 @@ function itemAddOrUpdate(){
         success : function (res){
             if (res.status==200){
                 alert(res.message);
-
+                clearAll();
             }else if (res.status==400){
                 alert(res.message)
 
@@ -52,47 +53,87 @@ function clearAll() {
 }
 
 //search item start
-/*
-$("#btnSearchItem").click(function () {
 
-    var response = searchItem($("#txtSearchItem").val());
-    if (response) {
-        $("#txtItemCode").val(response.getId);
-        $("#txtItemName").val(response.getName());
-        $("#txtItemQty").val(response.getQty());
-        $("#txtItemPrice").val(response.getPrice());
-    }else{
-        clearAll();
-        alert("No Such a Customer");
-    }
+$("#btnSearchItem").click(function () {
+    $.ajax({
+        url: "item?option=GETONE&id="+$("#txtSearchItem").val(),
+        method: "GET",
+
+        success : function (res){
+            if (res.status==200){
+
+                $("#txtItemCode").val(res.data.itemCode);
+                $("#txtItemName").val(res.data.name);
+                $("#txtItemQty").val(res.data.qty);
+                $("#txtItemPrice").val(res.data.price);
+
+            }else if (res.status==400){
+                alert("Item not found");
+            }
+        },
+
+        error : function (res){
+            alert("System Error");
+        }
+
+
+    })
 });
 
-
-
-
-function searchItem(itemCode) {
-    for(var i in itemDB){
-        if (itemCode==itemDB[i].getId()){
-            return itemDB[i];
-        }
-    }
-}
 //search item End
 
 
 function loadAllItems(){
-    $("#itemTable").empty();
-    itemDB.forEach(function (i) {
-        let row = `<tr><td>${i.getId()}</td><td>${i.getName()}</td><td>${i.getQty()}</td><td>${i.getPrice()}</td></tr>`;
-        $("#itemTable").append(row);
-    });
+    $.ajax({
+        url: "item?option=GETALL",
+        method: "GET",
+
+        success : function (res){
+            if (res.status==200){
+
+                $("#itemTable").empty();
+                for (const item of res.data){
+                    let row = `<tr><td>${item.itemCode}</td><td>${item.name}</td><td>${item.qty}</td><td>${item.price}</td></tr>`;
+                    $("#itemTable").append(row);
+                }
+
+            }else if (res.status==400){
+                alert("Item not found");
+            }
+        },
+
+        error : function (res){
+            alert("System Error");
+        }
+
+
+    })
 }
 
 //delete items
 
 $("#btnDeleteItem").click(function () {
 
-    var id=$("#txtSearchItem").val();
+    $.ajax({
+        url :"item?id="+$("#txtItemCode").val(),
+        method : "DELETE",
+        success : function (res){
+
+            if (res.status == 200){
+                alert(res.message);
+            }else if(res.status == 400){
+                alert(res.message);
+            }
+
+        },
+
+        error : function (){
+            alert("System error");
+        }
+
+
+    });
+    /*var id=$("#txtSearchItem").val();
     if(searchItem(id)==null){
         alert("no such as Item !");
     }
@@ -104,10 +145,10 @@ $("#btnDeleteItem").click(function () {
 
             break;
         }
-    }
+    }*/
 
 });
-
+/*
 //Validation Start
 // Item regular expressions
 const itemCodeRegEx = /^(I00-)[0-9]{1,3}$/;
