@@ -88,9 +88,9 @@ public class CustomerBOServlet extends HttpServlet {
             case "GETONE" :
 
                 try {
-
                     if(customerDAO.ifCustomerExist(req.getParameter("id"))){
 
+                        System.out.println(req.getParameter("id"));
 
                         Customer cus = customerDAO.search(req.getParameter("id"));
 

@@ -1,102 +1,108 @@
-//CustomerSearch
-generateOrderId();
-updateDate();
 
-function updateDate() {
-    let now = new Date();
-    let today = now.getDate()  + '/' + (now.getMonth() + 1) + '/' + now.getFullYear();
-    $("#txtOrderDate").val(today);
-}
 
 $("#btnCustomerSearch").click(function () {
-    let id=$("#txtCustomerId").val();
+    $.ajax({
+        url :"customer?option=GETONE&id="+$("#txtCustomerId").val(),
+        method : "GET",
+        success : function (res){
+            if (res.status==200){
+                $("#txtCustomerId").val(res.data.id);
+                $("#txtCustomerName").val(res.data.name);
+                $("#txtCustomerSalary").val(res.data.salary);
+                $("#txtCustomerAddress").val(res.data.address);
 
-    var customerExist=0;
-    for (var i in customerDB) {
-        if (id=customerDB[i].getId()){
-            $("#txtCustomerName").val(customerDB[i].getName());
-            $("#txtCustomerAddress").val(customerDB[i].getAddress());
-            $("#txtCustomerSalary").val(customerDB[i].getSalary());
-            customerExist=1;
-
+            }else if(res.status==400){
+                alert(res.message);
+            }
         }
-    }
-    if (customerExist==0){
-        alert("Such As A NO Customer ..!")
-    }
+    })
 });
 //ItemSearch
 $("#btnOrderItemSearch").click(function () {
-    let id=$("#txtICode").val();
+    $.ajax({
+        url: "item?option=GETONE&id="+$("#txtICode").val(),
+        method: "GET",
 
-    var itemExist=0;
-    for (var i in itemDB) {
-        if (id=itemDB[i].getId()){
-            $("#txtIName").val(itemDB[i].getName());
-            $("#txtIPrice").val(itemDB[i].getPrice());
-            $("#txtQtyOnHand").val(itemDB[i].getQty());
-            itemExist=1;
+        success : function (res){
+            if (res.status==200){
 
+                $("#txtICode").val(res.data.itemCode);
+                $("#txtIName").val(res.data.name);
+                $("#txtQtyOnHand").val(res.data.qty);
+                $("#txtIPrice").val(res.data.price);
+
+            }else if (res.status==400){
+                alert("Item not found");
+            }
+        },
+
+        error : function (res){
+            alert("System Error");
         }
-    }
-    if (itemExist==0){
-        alert("Such As A NO Item ..!")
-    }
+
+
+    })
 });
 
 
 //Add to table
 
 $("#btnAdd").click(function () {
+    var itemCode= $("#txtICode").val();
+    var itemName= $("#txtIName").val();
+    var itemPrice= $("#txtIPrice").val();
+    var qtyOnHand=$("#txtQtyOnHand").val();
 
-    var itemCode=$("#txtICode").val();
-    var itemName=$("#txtIName").val();
-    var itemPrice=$("#txtIPrice").val();
-    var itemQtyOnHand=$("#txtQtyOnHand").val();
-    var itemDiscount=parseInt($("#txtDiscount").val());
+    var qty=parseInt( $("#txtOrderQty").val());
 
-    var qty=parseInt($("#txtOrderQty").val());
+    /*  var itemFinallyPrice= itemPrice-((discount/100)itemPrice);/
+    /*  var totalItemPrice=itemPrice*qty;*/
 
+
+    //var itemFinallyPrice= itemPrice-((discount/100)*itemPrice);
     var totalItemPrice=itemPrice*qty;
+    console.log(totalItemPrice);
 
 
+    var itemExist=0;
+    for(var i in cartItems){
+        if (cartItems[i].getItemCode()==itemCode){
 
-
-    var itemExsit=0;
-    for (var i in cartItem) {
-        if (cartItem[i].getItemCode()==itemCode){
-
-            var oldItemQty =cartItem[i].getItemQty();
+            var oldItemQty =parseInt(cartItems[i].getItemQty());
             var newItemQty=oldItemQty+qty;
 
-            cartItem[i].setItemQty(newItemQty);
-            cartItem[i].setItemPrice(itemPrice);
-            cartItem[i].setTotalItemPrice(totalItemPrice);
-            itemExsit=1;
+            cartItems[i].setItemQty(newItemQty);
+            cartItems[i].setItemPrice(itemPrice);
+            cartItems[i].setTotalItemPrice(totalItemPrice);
+            itemExist=1;
             loadCart();
             break;
         }
     }
-    if (itemExsit==0){
-        var orderCart=new OrderCart(itemCode,itemName,qty,itemPrice,itemDiscount,totalItemPrice);
-        cartItem.push(orderCart);
-        alert("ok");
+
+
+    if (itemExist==0){
+        let orderCart = new OrderCart(itemCode,itemName,qty,itemPrice,totalItemPrice)
+        cartItems.push(orderCart);
         loadCart();
     }
-
 
 });
 
 function loadCart(){
     var total=0;
     $("#orderTable").empty();
-    cartItem.forEach(function (i) {
-        let row = `<tr><td>${i.getItemCode()}</td><td>${i.getItemName()}</td><td>${i.getItemQty()}</td><td>${i.getItemPrice()}</td><td>${i.getTotalItemPrice()}</td></tr>`;
-        total+=i.getTotalItemPrice();
+    cartItems.forEach(function (i) {
+        let row = `<tr><td>${i.getItemCode()}</td><td>${i.getItemName()}</td><td>${i.getItemQty()}
+        </td><td>${i.getItemPrice()}</td><td>${i.getTotalItemPrice()}</td></tr>`;
+
+        total+=parseInt(i.getTotalItemPrice());
+        console.log(i.getTotalItemPrice());
         $("#orderTable").append(row);
     });
     $("#txtTotal").val('');
     $("#txtTotal").val(total);
+    console.log(total);
     $("#txtSubTotal").val('');
     $("#txtSubTotal").val(total);
 }
@@ -140,7 +146,8 @@ function keyPress() {
 
 //parches Order
 $("#btnPurchase").click(function () {
-    let res=confirm("Place order?");
+    alert("button wda");
+    /*let res=confirm("Place order?");
     if (res) {
 
         if (generateResOrderId() == $("#txtOrderId").val()) {
@@ -174,11 +181,40 @@ $("#btnPurchase").click(function () {
 
             }
         }
+    }*/
+
+    var order={
+        orderId:$("#txtOrderId").val(),
+        custId:$("#txtCustomerId").val(),
+        date:$("#txtOrderDate").val()
     }
+
+    $.ajax({
+        url:"order",
+        method:"POST",
+        contentType:"application/json",
+
+        data :Json.stringify(order),
+
+        success : function (res) {
+                if (res.status==200){
+                    alert(res.message);
+                }else if (res.status==400){
+                    alert(res.message);
+                }
+
+
+            },
+            error : function (res){
+
+                alert("System Error");
+
+            }
+    })
 })
 
 
-$("#txtOrderId").on('keydown',function (event) {
+/*$("#txtOrderId").on('keydown',function (event) {
 
     if (event.key=="Enter"){
 
@@ -210,7 +246,7 @@ $("#txtOrderId").on('keydown',function (event) {
         }
     }
 
-});
+});*/
 
 //end
 
@@ -236,7 +272,7 @@ function clearAll() {
 
 //generate OrderID
 
-function generateOrderId() {
+/*function generateOrderId() {
     if (orders.length!=0) {
 
         let lastrecord = orders[orders.length - 1].getOrderId();
@@ -262,12 +298,12 @@ function generateOrderId() {
         $("#txtOrderId").val(generateId);
 
     }
-}
+}*/
 
 //genarateResOrderId
 
 function generateResOrderId() {
-    if (orders.length!=0) {
+    /*if (orders.length!=0) {
 
         let lastRecord = orders[orders.length - 1].getOrderId();
         let split = lastRecord.split("-");
@@ -290,16 +326,17 @@ function generateResOrderId() {
         let generateId="O00-001";
         return generateId;
 
-    }
+    }*/
 }
 
-$("#txtOrderId").on('keyup',function () {
+/*$("#txtOrderId").on('keyup',function () {
     if ($("#txtOrderId").val()==''){
         generateOrderId();
     }
-});
+});*/
 
 //get order
+/*
 $("#txtOrderId").on('keydown',function (event) {
 
     if (event.key=="Enter"){
@@ -343,4 +380,4 @@ $("#txtOrderId").on('keydown',function (event) {
 
     }
 
-});
+});*/
