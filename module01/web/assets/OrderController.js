@@ -194,7 +194,7 @@ $("#btnPurchase").click(function () {
         method:"POST",
         contentType:"application/json",
 
-        data :Json.stringify(order),
+        data : JSON.stringify(order),
 
         success : function (res) {
                 if (res.status==200){

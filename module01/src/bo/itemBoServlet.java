@@ -22,7 +22,7 @@ public class itemBoServlet extends HttpServlet {
     JsonObjectBuilder response = Json.createObjectBuilder();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
+        resp.setStatus(HttpServletResponse.SC_CREATED); //200
         resp.setContentType("application/json");
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject item = reader.readObject();
@@ -40,6 +40,7 @@ public class itemBoServlet extends HttpServlet {
             boolean add = itemDAO.add(new Item(code,name ,qty,price));
 
             if (add){
+
                 resp.setStatus(HttpServletResponse.SC_CREATED);//201
                 response.add("status", 200);
                 response.add("message", "Successfully Added");
@@ -49,31 +50,34 @@ public class itemBoServlet extends HttpServlet {
             }
 
 
-        } catch (SQLException e) {
+        }  catch (SQLException throwables) {
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
-            response.add("data", e.getLocalizedMessage());
+            response.add("data",throwables.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
 
-            throw new RuntimeException(e);
+
+
+            throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
-
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
 
-            throw new RuntimeException(e);
+
+            e.printStackTrace();
         }
     }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         resp.setStatus(HttpServletResponse.SC_CREATED);//201
+        PrintWriter writer = resp.getWriter();
         String option=req.getParameter("option");
         resp.setContentType("application/json");
         switch (option){
@@ -86,7 +90,7 @@ public class itemBoServlet extends HttpServlet {
 
                     if(itemDAO.ifItemExist(req.getParameter("id"))){
 
-
+                        resp.setStatus(HttpServletResponse.SC_CREATED);//201
                         Item item = itemDAO.search(req.getParameter("id"));
 
                         System.out.println(item.getItemCode()+" "+item.getItemName()+" "+item.getItemQty()+" "+item.getPrice());
@@ -101,47 +105,37 @@ public class itemBoServlet extends HttpServlet {
                         response.add("status",200);
                         response.add("data",jsonOb.build());
 
-                        PrintWriter writer = resp.getWriter();
                         writer.print(response.build());
 
 
                     }else {
-
+                        resp.setStatus(HttpServletResponse.SC_CREATED);//201
                         JsonObjectBuilder response = Json.createObjectBuilder();
                         response.add("status",400);
                         response.add("message" , "Customer Not Found");
-                        PrintWriter writer = resp.getWriter();
+
                         writer.print(response.build());
 
 
                     }
 
 
-
-
-                } catch (SQLException e) {
-                    JsonObjectBuilder response = Json.createObjectBuilder();
+                } catch (SQLException throwables) {
+                    resp.setStatus(HttpServletResponse.SC_CREATED);//201
                     response.add("status", 400);
                     response.add("message", "Error");
-                    response.add("data", e.getLocalizedMessage());
-                    PrintWriter writer = resp.getWriter();
+                    response.add("data",throwables.getLocalizedMessage());
                     writer.print(response.build());
 
-                    resp.setStatus(HttpServletResponse.SC_OK); //200
 
-
-                    throw new RuntimeException(e);
+                    throwables.printStackTrace();
                 } catch (ClassNotFoundException e) {
-                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    resp.setStatus(HttpServletResponse.SC_CREATED);//201
                     response.add("status", 400);
                     response.add("message", "Error");
                     response.add("data", e.getLocalizedMessage());
-                    PrintWriter writer = resp.getWriter();
                     writer.print(response.build());
-
-                    resp.setStatus(HttpServletResponse.SC_OK); //200
-
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 break;
 
@@ -169,36 +163,26 @@ public class itemBoServlet extends HttpServlet {
                     response.add("message" , "Done");
                     response.add("data" , arrayBuilder.build());
 
-                    PrintWriter writer = resp.getWriter();
+
                     writer.print(response.build());
 
 
-
-
-                } catch (SQLException e) {
-                    JsonObjectBuilder response = Json.createObjectBuilder();
+                } catch (SQLException throwables) {
+                    resp.setStatus(HttpServletResponse.SC_CREATED);//201
                     response.add("status", 400);
                     response.add("message", "Error");
-                    response.add("data", e.getLocalizedMessage());
-                    PrintWriter writer = resp.getWriter();
+                    response.add("data",throwables.getLocalizedMessage());
                     writer.print(response.build());
 
-                    resp.setStatus(HttpServletResponse.SC_OK); //200
 
-                    throw new RuntimeException(e);
-
+                    throwables.printStackTrace();
                 } catch (ClassNotFoundException e) {
-
-                    JsonObjectBuilder response = Json.createObjectBuilder();
+                    resp.setStatus(HttpServletResponse.SC_CREATED);//201
                     response.add("status", 400);
                     response.add("message", "Error");
                     response.add("data", e.getLocalizedMessage());
-                    PrintWriter writer = resp.getWriter();
                     writer.print(response.build());
-
-                    resp.setStatus(HttpServletResponse.SC_OK); //200
-
-                    throw new RuntimeException(e);
+                    e.printStackTrace();
                 }
                 break;
 
@@ -232,27 +216,22 @@ public class itemBoServlet extends HttpServlet {
             }
 
 
-        } catch (SQLException e) {
-            JsonObjectBuilder response = Json.createObjectBuilder();
+        } catch (SQLException throwables) {
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
-            response.add("data", e.getLocalizedMessage());
+            response.add("data",throwables.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
 
-            throw new RuntimeException(e);
+            throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
-
-            JsonObjectBuilder response = Json.createObjectBuilder();
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
-
-            resp.setStatus(HttpServletResponse.SC_OK); //200
-
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
 

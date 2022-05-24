@@ -12,13 +12,25 @@ CREATE TABLE IF NOT EXISTS  Customer(
 );
 
 
-DROP TABLE IF EXISTS Item;
-CREATE TABLE IF NOT EXISTS Item(
-       itemCode VARCHAR(20),
-       description VARCHAR(100) NOT NULL DEFAULT 'Unknown',
-       unitPrice DOUBLE(100),
-       qty INT,
-       CONSTRAINT PRIMARY KEY(itemCode)
+create table Item
+(
+    ItemCode    varchar(20)  not null
+        primary key,
+    description varchar(100) null,
+    unitPrice   varchar(100) null,
+    qty         varchar(100) null
 );
+
+create table `order`
+(
+    orderId varchar(20) not null
+        primary key,
+    custId  varchar(20) null,
+    date    varchar(30) null,
+    constraint order_Customer__fk
+        foreign key (custId) references Customer (custId)
+            on update cascade on delete cascade
+);
+
 
 

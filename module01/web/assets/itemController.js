@@ -3,6 +3,8 @@ loadAllItems();
 
 //add or update Items start
 function itemAddOrUpdate(){
+
+    alert("ok")
     var code=$("#txtItemCode").val();
     var name=$("#txtItemName").val();
     var qty=$("#txtItemQty").val();
@@ -26,8 +28,9 @@ function itemAddOrUpdate(){
             if (res.status==200){
                 alert(res.message);
                 clearAll();
+                loadAllItems();
             }else if (res.status==400){
-                alert(res.message)
+                alert(res.data)
 
             }else {
                 alert(res.data);
@@ -40,6 +43,7 @@ function itemAddOrUpdate(){
 
 $("#btnNewItem").click(function (){
     itemAddOrUpdate();
+
 });
 
 //add or update items End
@@ -89,6 +93,7 @@ function loadAllItems(){
         method: "GET",
 
         success : function (res){
+            $("#itemTable").empty();
             if (res.status==200){
 
                 $("#itemTable").empty();

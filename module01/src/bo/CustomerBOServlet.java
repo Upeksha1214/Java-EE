@@ -23,6 +23,7 @@ public class CustomerBOServlet extends HttpServlet {
     JsonObjectBuilder response=Json.createObjectBuilder();
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        resp.setStatus(HttpServletResponse.SC_CREATED);
         JsonReader reader = Json.createReader(req.getReader());
         JsonObject jsonObject = reader.readObject();
 
@@ -50,29 +51,27 @@ public class CustomerBOServlet extends HttpServlet {
                 response.add("data", "");
                 writer.print(response.build());
                 System.out.println("customer add");
-            }else {
-                System.out.println("customer add fail");
             }
 
         } catch (SQLException throwables) {
-
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
             response.add("data",throwables.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
+
 
 
             throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
-
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
+
 
             e.printStackTrace();
         }

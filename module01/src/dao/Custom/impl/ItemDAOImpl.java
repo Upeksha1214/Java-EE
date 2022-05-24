@@ -18,8 +18,8 @@ public class ItemDAOImpl implements ItemDAO{
 
     @Override
     public boolean add(Item item) throws SQLException, ClassNotFoundException {
-        return CurdUtil.executeUpdate("INSERT INTO Item(itemCode,name,qty,price) VALUES(?,?,?,?)",item.getItemCode(),
-                item.getItemName(),item.getItemQty(),item.getPrice());
+        return CurdUtil.executeUpdate("INSERT INTO Item(itemCode,description,unitPrice,qty) VALUES(?,?,?,?)",item.getItemCode(),
+                item.getItemName(),item.getPrice(),item.getItemQty());
     }
 
     @Override
@@ -36,7 +36,7 @@ public class ItemDAOImpl implements ItemDAO{
     public Item search(String s) throws SQLException, ClassNotFoundException {
         ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Item WHERE itemCode=?", s);
         resultSet.next();
-        return new Item(resultSet.getString("itemCode"),resultSet.getString("name"),resultSet.getString("qty"),resultSet.getString("price"));
+        return new Item(resultSet.getString("itemCode"),resultSet.getString("description"),resultSet.getString("unitPrice"),resultSet.getString("qty"));
     }
 
     @Override
@@ -44,7 +44,7 @@ public class ItemDAOImpl implements ItemDAO{
         ArrayList<Item> allItems=new ArrayList<>();
         ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Item");
         while (resultSet.next()){
-            allItems.add(new Item(resultSet.getString("itemCode"),resultSet.getString("name"),resultSet.getString("qty"),resultSet.getString("price")));
+            allItems.add(new Item(resultSet.getString("itemCode"),resultSet.getString("description"),resultSet.getString("qty"),resultSet.getString("unitPrice")));
         }
         return allItems;
     }

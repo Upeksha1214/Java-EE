@@ -59,28 +59,22 @@ public class OrderServletBO extends HttpServlet {
             }
 
 
-        } catch (SQLException e) {
-
+        } catch (SQLException throwables) {
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
-            response.add("data", e.getLocalizedMessage());
-
+            response.add("data",throwables.getLocalizedMessage());
             writer.print(response.build());
 
-            resp.setStatus(HttpServletResponse.SC_OK); //200
-            throw new RuntimeException(e);
+
+            throwables.printStackTrace();
         } catch (ClassNotFoundException e) {
-
+            resp.setStatus(HttpServletResponse.SC_CREATED);//201
             response.add("status", 400);
             response.add("message", "Error");
             response.add("data", e.getLocalizedMessage());
-
             writer.print(response.build());
-
-            resp.setStatus(HttpServletResponse.SC_OK); //200
-
-
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
 
     }

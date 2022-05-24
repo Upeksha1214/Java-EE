@@ -35,7 +35,7 @@ function customerAddOrUpdate() {
                 clearAll();
                 loadAllCustomer();
             }else if (res.status==400){
-                alert(res.message)
+                alert(res.data)
                 clearAll();
             }else {
                 alert(res.data);
@@ -51,6 +51,7 @@ $("#btnCustomer").click(function (){
 });
 
 function loadAllCustomer(){
+    $("#customerTable").empty();
     $.ajax({
         url:"customer?option=GetALL",
         method : "GET",

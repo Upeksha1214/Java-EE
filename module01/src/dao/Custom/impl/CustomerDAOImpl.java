@@ -28,7 +28,7 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public Customer search(String id) throws SQLException, ClassNotFoundException {
-        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM customer WHERE custId=?", id);
+        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Customer WHERE custId=?", id);
         resultSet.next();
         return new Customer(resultSet.getString("custId"),resultSet.getString("custName"),
                 resultSet.getString("custAddress"),resultSet.getString("salary"));
@@ -37,7 +37,7 @@ public class CustomerDAOImpl implements CustomerDAO {
     @Override
     public ArrayList<Customer> getAll() throws SQLException, ClassNotFoundException {
         ArrayList<Customer> allCustomers=new ArrayList<>();
-        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM customer");
+        ResultSet resultSet = CurdUtil.executeQuery("SELECT * FROM Customer");
         while (resultSet.next()){
             allCustomers.add(new Customer(resultSet.getString("custId"),resultSet.getString("custName"),resultSet.getString("custAddress"),resultSet.getString("salary")));
         }
@@ -46,6 +46,6 @@ public class CustomerDAOImpl implements CustomerDAO {
 
     @Override
     public boolean ifCustomerExist(String id) throws SQLException, ClassNotFoundException {
-        return CurdUtil.executeQuery("SELECT custId FROM customer WHERE custId=?", id).next();
+        return CurdUtil.executeQuery("SELECT custId FROM Customer WHERE custId=?", id).next();
     }
 }
